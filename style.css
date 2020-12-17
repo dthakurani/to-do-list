@@ -1,0 +1,113 @@
+body {
+    background-color: rgb(211, 211, 211);
+    font-family: 'Open Sans', sans-serif;
+    color: rgb(48, 48, 48);
+}
+
+header {
+    margin: 5%;
+}
+
+header,
+form {
+    min-height: 6%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+form input {
+    min-width: 16%;
+}
+
+form input,
+form button,
+form select {
+    /* position: absolute; */
+    padding: 0.25em;
+    font-size: 1em;
+    border: 0.75% solid black;
+    box-sizing: border-box;
+    
+}
+
+form button,
+form select {
+    color: black;
+    cursor: pointer;
+    transition: all 200ms ease;
+}
+
+form button:hover {
+    background-color: black;
+    color: white;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.list {
+    
+    min-width: 20%;
+    list-style: none;
+}
+
+.content {
+    display: flex;
+    margin: 5%;
+    background: white;
+    font-size: 1em;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.content li {
+    flex: 1;
+}
+
+.fa-check-circle,
+.fa-trash {
+    pointer-events: none;
+}
+
+.circleButton,
+.trashButton {
+    border: none;
+    padding: 3%;
+    cursor: pointer;
+    font-size: 1em;
+    transition: all 200ms ease;
+}
+
+.trashButton:hover,
+.circleButton:hover {
+    background-color: black;
+    color: white;
+}
+
+.item {
+    padding: 0em 0.75em;
+}
+
+.checked {
+    text-decoration: line-through;
+}
+
+.check {
+    background-color:green;
+}
+
+
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none; 
+    background-color: white;
+}
+
+
