@@ -3,16 +3,15 @@ let input = document.querySelector(".additem");
 let button = document.querySelector(".addbutton");
 let filterSelect = document.querySelector(".filters");
 displayList();
-// console.log(input);
 
+//event
 button.addEventListener("click", addToList);
 filterSelect.addEventListener("click", filterList);
 
 function addToList(event) {
     event.preventDefault();
     console.log(input);
-    // console.log("check");
-    // console.log(input.value);
+   
     let Div = document.createElement('div');
     Div.classList.add('content');
 
@@ -56,7 +55,7 @@ function markAndTrashDelete(event) {
     
     else if (tempItem.classList[0] === "trashButton") {
         let removeItem = tempItem.parentElement;
-        // console.log(removeItem);
+       
         deleteItemFromLocalStorage(removeItem.children[1].innerText);
         removeItem.remove();
     }
@@ -128,7 +127,7 @@ function updateItemStateInLocalStorage(text, state) {
         }
     });
     window.localStorage.setItem("localList", JSON.stringify(localList));
-    // console.log(localList);
+    
     
 }
 
