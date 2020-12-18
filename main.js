@@ -12,8 +12,8 @@ function addToList(event) {
     event.preventDefault();
     console.log(input);
    
-    let Div = document.createElement('div');
-    Div.classList.add('content');
+    let Div = document.createElement('li');
+    Div.classList.add('item');
 
     
 
@@ -22,9 +22,9 @@ function addToList(event) {
     circlebutton.classList.add("circleButton");
     Div.appendChild(circlebutton);
 
-    let tempItem = document.createElement('li');
+    let tempItem = document.createElement('p');
     tempItem.innerText = input.value;
-    tempItem.classList.add('item');
+    tempItem.classList.add('p');
     Div.appendChild(tempItem);
     addItemInLocalStorage(input.value);
 
@@ -49,6 +49,8 @@ function markAndTrashDelete(event) {
         console.log(checkItem);
         checkItem.classList.toggle('checked');
         tempItem.classList.toggle('check');
+        console.log(checkItem.children[1].innerText );
+        console.log(checkItem.classList.contains("checked"));
         updateItemStateInLocalStorage(checkItem.children[1].innerText, checkItem.classList.contains("checked"));
     }
 
@@ -86,21 +88,20 @@ function displayList() {
 
     localList.forEach(element => {
 
-        let Div = document.createElement('div');
-        if(element.done)
-          Div.classList.add('content', 'checked');
-        else Div.classList.add('content');
-
-        let tempItem = document.createElement('li');
+        let Div = document.createElement('li');
+        if (element.done)
+            Div.classList.add('item', 'checked');
+        else Div.classList.add('item');
 
         var circlebutton = document.createElement('button');
         circlebutton.innerHTML = '<i class="far fa-check-circle"></i>';
-        if (element.done) circlebutton.classList.add("circleButton", "check"); 
+        if (element.done) circlebutton.classList.add("circleButton", "check");
         else circlebutton.classList.add("circleButton");
         Div.appendChild(circlebutton);
-        
+
+        let tempItem = document.createElement('p');
         tempItem.innerText = element.name;
-        tempItem.classList.add('item');
+        tempItem.classList.add('p');
         Div.appendChild(tempItem);
 
         let trashbutton = document.createElement('button');
@@ -108,7 +109,8 @@ function displayList() {
         trashbutton.classList.add("trashButton");
         Div.appendChild(trashbutton);
 
-        List.appendChild(Div);
+        
+            List.appendChild(Div);
         
     });
     
@@ -144,27 +146,30 @@ function deleteItemFromLocalStorage(text) {
 }
 
 function filterList(event) {
-    // let localList = List.childNodes;
-    // console.log(localList);
-    // localList.forEach(element => {
-    //     switch (event.target.value) {
-    //         case "all":
-    //             element.style.display = 'flex';
-    //             break;
+    const todos = List.childNodes;
+    
+    console.log(todos);
+    todos.forEach(todo => {
+      
+        switch (event.target.value) {
+            case "all": todo.style.display = '';
+                break;
 
-    //         case "done": if(element.classList.contains('checked')) {
-    //             element.style.display = 'flex';
-    //         }
-    //         else {
-    //             element.style.display = 'none';
-    //         }
-    //     }
-    // });
-    if(event.target.value === "all") {
-        console.log("All");
-    }else if(event.target.value === "done") {
-        console.log("done");
-    }else console.log("undone");
+            case "complete": if (todo.classList.contains('checked')){
+                todo.style.display = '';
+            } else{
+                todo.style.display = 'none';
+            } break;
+
+            case "undone": if (todo.classList.contains('checked')) {
+                todo.style.display = 'none';
+            } else {
+                todo.style.display = '';
+            } break;
+    }
+    
+
+    })
     
 }
 
