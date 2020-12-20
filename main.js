@@ -1,128 +1,88 @@
-let List = document.querySelector(".list");
+// Selectors
+let list = document.querySelector(".list");
 let input = document.querySelector(".additem");
 let button = document.querySelector(".addbutton");
 let filterSelect = document.querySelector(".filters");
+
+// Function Call
 displayList();
 
-//event
+//eventListener
 button.addEventListener("click", addToList);
-filterSelect.addEventListener("click", filterList);
+list.addEventListener("click", markAndTrashDelete);
+filterSelect.addEventListener("change", filterList);
 
-function addToList(event) {
-    event.preventDefault();
-    console.log(input);
-   
-    let Div = document.createElement('li');
-    Div.classList.add('item');
-
-    
+// Functions
+function itemCreation(value) {
+    let listItem = document.createElement('li');
+    listItem.classList.add('item');
 
     var circlebutton = document.createElement('button');
     circlebutton.innerHTML = '<i class="far fa-check-circle"></i>';
     circlebutton.classList.add("circleButton");
-    Div.appendChild(circlebutton);
+    listItem.appendChild(circlebutton);
 
     let tempItem = document.createElement('p');
-    tempItem.innerText = input.value;
+    tempItem.innerText = value;
     tempItem.classList.add('p');
-    Div.appendChild(tempItem);
-    addItemInLocalStorage(input.value);
+    listItem.appendChild(tempItem);
 
     let trashbutton = document.createElement('button');
     trashbutton.innerHTML = '<i class="fas fa-trash"></i>';
     trashbutton.classList.add("trashButton");
-    Div.appendChild(trashbutton);
+    listItem.appendChild(trashbutton);
+
+
+    return listItem;
     
-    if(input.value !== null)
-        List.appendChild(Div);
+}
+function addToList(event) {
+    
+    if(input.value === null) return;
+    event.preventDefault();
+    addItemInLocalStorage(input.value);
+    list.appendChild(itemCreation(input.value));
     input.value = "";
 }
 
-
-List.addEventListener("click", markAndTrashDelete);
-
 function markAndTrashDelete(event) {
     let tempItem = event.target;
-    
     if (tempItem.classList[0] === "circleButton") {
         let checkItem = tempItem.parentElement;
-        console.log(checkItem);
         checkItem.classList.toggle('checked');
-        tempItem.classList.toggle('check');
-        console.log(checkItem.children[1].innerText );
-        console.log(checkItem.classList.contains("checked"));
         updateItemStateInLocalStorage(checkItem.children[1].innerText, checkItem.classList.contains("checked"));
-    }
-
-    
-    else if (tempItem.classList[0] === "trashButton") {
+    }else if (tempItem.classList[0] === "trashButton") {
         let removeItem = tempItem.parentElement;
-       
         deleteItemFromLocalStorage(removeItem.children[1].innerText);
         removeItem.remove();
     }
+}
 
+function createLocalList() {
+    let localList;
+    if (window.localStorage.getItem("localList") !== null) {
+        localList = JSON.parse(window.localStorage.getItem("localList"));
+    }else localList = [];
+    return localList;
 }
 
 function addItemInLocalStorage(tempItem) {
-
-    let localList;
-
-    if(window.localStorage.getItem("localList") !== null) {
-        localList = JSON.parse(window.localStorage.getItem("localList"));
-     }
-     else localList = []; 
-
+    let localList = createLocalList();
     localList.push({name: tempItem, done: false});
     window.localStorage.setItem("localList", JSON.stringify(localList));
-    
 }
 
 function displayList() {
-    let localList;
-
-    if (window.localStorage.getItem("localList") !== null) {
-        localList = JSON.parse(window.localStorage.getItem("localList"));
-    }
-    else localList = [];
-
+    let localList = createLocalList();
     localList.forEach(element => {
-
-        let Div = document.createElement('li');
-        if (element.done)
-            Div.classList.add('item', 'checked');
-        else Div.classList.add('item');
-
-        var circlebutton = document.createElement('button');
-        circlebutton.innerHTML = '<i class="far fa-check-circle"></i>';
-        if (element.done) circlebutton.classList.add("circleButton", "check");
-        else circlebutton.classList.add("circleButton");
-        Div.appendChild(circlebutton);
-
-        let tempItem = document.createElement('p');
-        tempItem.innerText = element.name;
-        tempItem.classList.add('p');
-        Div.appendChild(tempItem);
-
-        let trashbutton = document.createElement('button');
-        trashbutton.innerHTML = '<i class="fas fa-trash"></i>';
-        trashbutton.classList.add("trashButton");
-        Div.appendChild(trashbutton);
-
-        
-            List.appendChild(Div);
-        
+        let listItem = itemCreation(element.name);
+        if(element.done) listItem.classList.add('checked');
+        list.appendChild(listItem);
     });
-    
 }
 
 function updateItemStateInLocalStorage(text, state) {
-    let localList;
-
-    if (window.localStorage.getItem("localList") !== null) {
-        localList = JSON.parse(window.localStorage.getItem("localList"));
-    }
-    else localList = [];
+    let localList = createLocalList();
     localList.forEach(i => {
         if(i.name === text) {
             i.done = state;
@@ -134,43 +94,32 @@ function updateItemStateInLocalStorage(text, state) {
 }
 
 function deleteItemFromLocalStorage(text) {
-
-    let localList;
-
-    if (window.localStorage.getItem("localList") !== null) {
-        localList = JSON.parse(window.localStorage.getItem("localList"));
-    }
-    else localList = [];
-   localList = localList.filter(i => i.name !== text);
+    let localList = createLocalList();
+    localList = localList.filter(i => i.name !== text);
     window.localStorage.setItem("localList", JSON.stringify(localList));
 }
 
 function filterList(event) {
-    const todos = List.childNodes;
-    
-    console.log(todos);
+    const todos = list.childNodes;
     todos.forEach(todo => {
       
         switch (event.target.value) {
             case "all": todo.style.display = '';
                 break;
 
-            case "complete": if (todo.classList.contains('checked')){
+            case "1": if (todo.classList.contains('checked')){
                 todo.style.display = '';
             } else{
                 todo.style.display = 'none';
             } break;
 
-            case "undone": if (todo.classList.contains('checked')) {
+            case "0": if (todo.classList.contains('checked')) {
                 todo.style.display = 'none';
             } else {
                 todo.style.display = '';
             } break;
-    }
-    
-
-    })
-    
+        }
+    });
 }
 
 
